@@ -150,24 +150,22 @@ else
 fi
 
 
-# Step 1.5: Install required npm packages
-echo "Checking for required npm packages..."
+# Step 1.5: Temporarily remove sqlite3 from package.json and install other packages
+echo "Temporarily excluding sqlite3 from package.json dependencies..."
 
-# List of specific packages needed
-REQUIRED_NPM_PACKAGES=("bcryptjs" "cors" "dotenv" "express" "jsonwebtoken" "prompt-sync" "express-rate-limit"
-    "serve-favicon")
+# Backup package.json
+cp package.json package.json.bak
 
-# Install any missing packages
-for PACKAGE in "${REQUIRED_NPM_PACKAGES[@]}"; do
-    if ! npm list "$PACKAGE" &>/dev/null; then
-        echo "Installing $PACKAGE..."
-        npm install "$PACKAGE"
-    else
-        echo "$PACKAGE is already installed."
-    fi
-done
+# Remove sqlite3 from package.json dependencies
+jq 'del(.dependencies.sqlite3)' package.json > temp.json && mv temp.json package.json
 
-echo "All required npm packages are installed."
+# Install remaining packages from package.json, excluding sqlite3
+echo "Installing all dependencies except sqlite3..."
+npm install --no-save
+
+# Restore original package.json
+mv package.json.bak package.json
+echo "Restored package.json with sqlite3 included."
 
 # Configure swap and install sqlite3 with concurrency limited to 1
 install_sqlite3_with_swap() {
