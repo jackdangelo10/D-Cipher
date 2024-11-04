@@ -97,39 +97,6 @@ install_build_tools() {
     sudo apt install -y build-essential
 }
 
-# Function to install sqlite3 with error handling
-install_sqlite3_with_retries() {
-    local retries=3
-    local count=0
-
-    while [[ $count -lt $retries ]]; do
-        echo "Attempting to install sqlite3... Try $((count+1)) of $retries"
-        
-        # Attempt to install sqlite3
-        if npm install sqlite3 --build-from-source; then
-            echo "sqlite3 installed successfully."
-            return 0
-        else
-            echo "sqlite3 installation failed."
-
-            # On first failure, configure swap and install build tools
-            if [[ $count -eq 0 ]]; then
-                echo "Applying additional system configurations for sqlite3 installation..."
-                configure_swap
-                install_build_tools
-            fi
-        fi
-
-        ((count++))
-    done
-
-    echo "Failed to install sqlite3 after $retries attempts."
-    exit 1
-}
-
-# Install sqlite3 with retry mechanism
-install_sqlite3_with_retries
-
 # Function to terminate background processes if they are running
 terminate_processes() {
     pkill -f "ngrok http" 2>/dev/null
@@ -205,26 +172,6 @@ else
 fi
 
 
-# Step 1.5: Install required npm packages
-echo "Checking for required npm packages..."
-
-# List of specific packages needed
-REQUIRED_NPM_PACKAGES=("bcryptjs" "cors" "dotenv" "express" "jsonwebtoken" "prompt-sync" "sqlite3" "express-rate-limit"
-    "serve-favicon")
-
-# Install any missing packages
-for PACKAGE in "${REQUIRED_NPM_PACKAGES[@]}"; do
-    if ! npm list "$PACKAGE" &>/dev/null; then
-        echo "Installing $PACKAGE..."
-        npm install "$PACKAGE"
-    else
-        echo "$PACKAGE is already installed."
-    fi
-done
-
-echo "All required npm packages are installed."
-
-
 
 # Step 2: Check for existing database
 DB_FILE="./users.db"
@@ -242,15 +189,6 @@ else
     new_db=true
 fi
 
-# Step 3: Install project dependencies
-echo "Setting up project dependencies..."
-npm install
-
-# Install prompt-sync if not already installed
-if ! npm list prompt-sync &>/dev/null; then
-    echo "Installing prompt-sync for command-line prompts..."
-    npm install prompt-sync
-fi
 
 # Step 4: Configure environment variables
 echo "Configuring environment variables..."
