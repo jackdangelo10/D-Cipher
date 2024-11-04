@@ -135,55 +135,47 @@ else
     echo "Node.js and npm are already installed."
 fi
 
-if ! command_exists sqlite3; then
-    echo "Installing SQLite..."
-    if [[ "$OS" == "linux" || "$OS" == "raspbian" ]]; then
-        sudo apt install -y sqlite3
-    elif [[ "$OS" == "macos" ]]; then
-        brew install sqlite
-    elif [[ "$OS" == "windows" ]]; then
-        echo "Please install SQLite manually: https://www.sqlite.org/download.html"
-        read -p "Press Enter to continue after installing SQLite."
-    fi
+# Step 1.5: Check if sqlite3 is already installed
+if npm list sqlite3 &>/dev/null; then
+    echo "sqlite3 is already installed. Skipping sqlite3 installation."
 else
-    echo "SQLite is already installed."
+    echo "sqlite3 is not installed. Proceeding with temporary exclusion and installation..."
+
+    # Temporarily remove sqlite3 from package.json and install other packages
+    echo "Temporarily excluding sqlite3 from package.json dependencies..."
+
+    # Backup package.json
+    cp package.json package.json.bak
+
+    # Remove sqlite3 from package.json dependencies
+    jq 'del(.dependencies.sqlite3)' package.json > temp.json && mv temp.json package.json
+
+    # Install remaining packages from package.json, excluding sqlite3
+    echo "Installing all dependencies except sqlite3..."
+    npm install --no-save
+
+    # Restore original package.json
+    mv package.json.bak package.json
+    echo "Restored package.json with sqlite3 included."
+
+    # Configure swap and install sqlite3 with concurrency limited to 1
+    install_sqlite3_with_swap() {
+        echo "Configuring additional swap memory for sqlite3 installation..."
+        sudo sed -i 's/^CONF_SWAPSIZE=.*$/CONF_SWAPSIZE=2048/' /etc/dphys-swapfile
+        sudo systemctl restart dphys-swapfile
+
+        echo "Installing sqlite3 with limited concurrency. This may take some time (5-20 min for 1GB RAM)..."
+        npm install sqlite3 --build-from-source --concurrency=1
+
+        # Restore default swap settings after sqlite3 installation
+        sudo sed -i 's/^CONF_SWAPSIZE=.*$/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+        sudo systemctl restart dphys-swapfile
+        echo "Reverted swap configuration."
+    }
+
+    # Call the function to install sqlite3 with swap enabled
+    install_sqlite3_with_swap
 fi
-
-
-# Step 1.5: Temporarily remove sqlite3 from package.json and install other packages
-echo "Temporarily excluding sqlite3 from package.json dependencies..."
-
-# Backup package.json
-cp package.json package.json.bak
-
-# Remove sqlite3 from package.json dependencies
-jq 'del(.dependencies.sqlite3)' package.json > temp.json && mv temp.json package.json
-
-# Install remaining packages from package.json, excluding sqlite3
-echo "Installing all dependencies except sqlite3..."
-npm install --no-save
-
-# Restore original package.json
-mv package.json.bak package.json
-echo "Restored package.json with sqlite3 included."
-
-# Configure swap and install sqlite3 with concurrency limited to 1
-install_sqlite3_with_swap() {
-    echo "Configuring additional swap memory for sqlite3 installation..."
-    sudo sed -i 's/^CONF_SWAPSIZE=.*$/CONF_SWAPSIZE=2048/' /etc/dphys-swapfile
-    sudo systemctl restart dphys-swapfile
-
-    echo "Installing sqlite3 with limited concurrency. This may take some time (5-20 min for 1GB RAM)..."
-    npm install sqlite3 --build-from-source --concurrency=1
-
-    # Restore default swap settings after sqlite3 installation
-    sudo sed -i 's/^CONF_SWAPSIZE=.*$/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
-    sudo systemctl restart dphys-swapfile
-    echo "Reverted swap configuration."
-}
-
-# Call the function to install sqlite3 with swap enabled
-install_sqlite3_with_swap
 
 
 
