@@ -22,6 +22,7 @@ command_exists() {
 }
 
 # Function to install Node.js 16 using NVM if the version is below 16
+# Function to install Node.js 16 using NVM if the version is below 16
 install_node16_if_necessary() {
     if command_exists node; then
         NODE_VERSION=$(node -v | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
@@ -35,8 +36,17 @@ install_node16_if_necessary() {
     echo "Node.js version 16+ is required. Installing NVM and Node.js 16..."
     if ! command_exists nvm; then
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-        source ~/.nvm/nvm.sh
+
+        # Load NVM into the current shell session
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+        # Add NVM to bash profile for future sessions
+        echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
+        echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
     fi
+
+    # Use NVM to install and use Node.js 16
     nvm install 16
     nvm use 16
     nvm alias default 16
