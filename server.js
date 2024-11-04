@@ -5,8 +5,9 @@ const app = express();
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const passwordRoutes = require('./routes/passwordRoutes');
-const cors = require('cors'); // Import CORS
 
+// Serve the favicon
+app.use(favicon(path.join(__dirname, 'favicon.ico')));
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'views')));

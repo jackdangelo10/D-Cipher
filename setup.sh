@@ -100,7 +100,8 @@ fi
 echo "Checking for required npm packages..."
 
 # List of specific packages needed
-REQUIRED_NPM_PACKAGES=("bcryptjs" "cors" "dotenv" "express" "jsonwebtoken" "prompt-sync" "sqlite3" "express-rate-limit")
+REQUIRED_NPM_PACKAGES=("bcryptjs" "cors" "dotenv" "express" "jsonwebtoken" "prompt-sync" "sqlite3" "express-rate-limit"
+    "serve-favicon")
 
 # Install any missing packages
 for PACKAGE in "${REQUIRED_NPM_PACKAGES[@]}"; do
