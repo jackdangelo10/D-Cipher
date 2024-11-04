@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="css/login.css">
+  <!-- JavaScript to conditionally load mobile CSS -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const screenWidth = window.innerWidth;
+    console.log("Screen width detected:", screenWidth);
+
+    if (screenWidth <= 1179) {
+      console.log("Mobile CSS loaded based on width check.");
+      const mobileCSS = document.createElement("link");
+      mobileCSS.rel = "stylesheet";
+      mobileCSS.href = "css/login-mobile.css";
+      document.head.appendChild(mobileCSS);
+    } else {
+      console.log("Desktop screen detected; default CSS loaded.");
+    }
+  });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <img src="img/logo.png" alt="App Logo" class="logo">
+    <div class="login-container">
+      <h2 class="login-title">D'Cipher Login</h2>
+      <form id="login-form" class="login-form">
+        <div class="input-group">
+          <input type="text" id="username" placeholder="Username" required>
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <div class="error" id="error-message"></div>
+      </form>
+    </div>
+  </div>
+  <script src="js/login.js" type="module"></script>
+</body>
+</html>

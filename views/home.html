@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- JavaScript to conditionally load mobile CSS -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const screenWidth = window.innerWidth;
+    console.log("Screen width detected:", screenWidth);
+
+    if (screenWidth <= 1179) {
+      console.log("Mobile CSS loaded based on width check.");
+      const mobileCSS = document.createElement("link");
+      mobileCSS.rel = "stylesheet";
+      mobileCSS.href = "css/home-mobile.css";
+      document.head.appendChild(mobileCSS);
+    } else {
+      console.log("Desktop screen detected; default CSS loaded.");
+    }
+  });
+  </script>
+
+</head>
+<body>
+  <!-- Side Panel -->
+  <div id="side-panel" class="side-panel">
+    <button class="side-panel-btn" id="user-change-username-btn">Change Username</button>
+    <button class="side-panel-btn" id="user-change-password-btn">Change Password</button>
+    <button class="side-panel-btn" id="sign-out-btn">Sign Out</button>
+  </div>
+
+  <!-- Hamburger Button -->
+  <button id="hamburger-btn" class="hamburger-btn">☰</button>
+
+  <!-- Change User Username Modal -->
+  <div id="user-change-username-modal" class="modal">
+    <div class="modal-content">
+      <span id="user-close-modal" class="close-btn">&times;</span>
+      <h2>Change Username</h2>
+      <p>Please confirm your current password:</p>
+      <input type="password" id="user-change-username-current-password" placeholder="Current Password">
+      <p>Enter your new username:</p>
+      <input type="text" id="user-new-username" placeholder="New Username">
+      <button id="user-submit-username-change" class="modal-submit-btn">Submit</button>
+      <p id="user-modal-message" class="modal-message"></p>
+    </div>
+  </div>
+
+  <!-- Change User Password Modal -->
+  <div id="user-change-password-modal" class="modal">
+    <div class="modal-content">
+      <span id="user-close-password-modal" class="close-btn">&times;</span>
+      <h2>Change Password</h2>
+      <p>Please confirm your current password:</p>
+      <input type="password" id="user-change-password-current-password" placeholder="Current Password">
+      <p>Enter your new password:</p>
+      <input type="password" id="user-new-password" placeholder="New Password">
+      <p id="user-password-strength" class="password-strength">Strength: N/A</p>
+      <button id="user-submit-password-change" class="modal-submit-btn">Submit</button>
+      <p id="user-password-modal-message" class="modal-message"></p>
+    </div>
+  </div>
+
+  <!-- Change Card Username Modal -->
+  <div id="card-change-username-modal" class="modal">
+    <div class="modal-content">
+      <span id="card-close-username-modal" class="close-btn">&times;</span>
+      <h3>Change Username</h3>
+      <div class="card-username-modal-message" id="card-username-modal-message"></div>
+      <input type="password" id="card-change-username-current-password" placeholder="Current Password" required>
+      <input type="text" id="card-new-username" placeholder="New Username" required>
+      <button id="card-submit-username-change" class="modal-submit-btn">Submit</button>
+    </div>
+  </div>
+
+  <!-- Change Card Password Modal -->
+  <div id="card-change-password-modal" class="modal">
+    <div class="modal-content">
+      <span id="card-close-password-modal" class="close-btn">&times;</span>
+      <h3>Change Password</h3>
+      <p id="card-password-modal-message" class="modal-message"></p>
+      <input type="password" id="card-change-password-current-password" placeholder="Current Password" required>
+      <input type="password" id="card-new-password" placeholder="New Password" required>
+      <p id="card-password-strength" class="password-strength">Strength: N/A</p>
+      <button id="card-submit-password-change" class="modal-submit-btn">Submit</button>
+    </div>
+  </div>
+
+  <!-- Add New Password Modal -->
+  <div id="add-password-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-add-password-modal" class="close-btn">&times;</span>
+      <h2>Add New Password</h2>
+      
+      <div class="input-group">
+        <label for="service-name">Service Name</label>
+        <input type="text" id="service-name" placeholder="Service Name" required>
+      </div>
+
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Username" required>
+      </div>
+
+      <div class="input-group">
+        <label for="add-new-password">Password</label>
+        <input type="password" id="add-new-password" placeholder="Password" required>
+        <p id="add-password-strength" class="password-strength">Strength: N/A</p>
+      </div>
+
+      <div class="input-group">
+        <label for="visibility">Visibility</label>
+        <select id="visibility">
+          <option value="private">Me</option>
+          <option value="family">Family</option>
+        </select>
+      </div>
+
+      <button id="submit-add-password" class="modal-submit-btn">Add Password</button>
+      <p id="add-password-message" class="modal-message"></p>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <!-- Logo and Title -->
+    <div class="logo-title">
+      <img src="img/logo.png" alt="Logo" class="logo">
+      <h1 class="page-title">D'Cipher</h1>
+    </div>
+
+    <!-- Search bar and Add button -->
+    <div class="header">
+      <input type="text" id="search-bar" placeholder="Search by Service Name">
+      <button id="add-password-btn" class="add-btn">➕</button>
+    </div>
+
+    <!-- Scrollable card view -->
+    <div class="card-list" id="password-entries">
+      <!-- Cards will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <script type="module" src="js/api.js"></script>
+  <script type="module" src="js/card.js"></script>
+  <script type="module" src="js/modals.js"></script>
+  <script type="module" src="js/password-strength.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/side-panel.js"></script>
+</body>
+</html>

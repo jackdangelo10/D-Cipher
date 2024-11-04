@@ -1,0 +1,85 @@
+/* General Styling */
+body {
+    font-family: 'Bona Nova', serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #0A1E2E; /* Midnight Blue background */
+    box-sizing: border-box;
+}
+
+.container {
+    display: flex;
+    flex-direction: column; /* Stack logo and login-container vertically */
+    align-items: center; /* Center logo and login box horizontally */
+    gap: 2rem; /* Space between logo and login-container */
+}
+
+.login-container {
+    width: 90%; /* Responsive width */
+    max-width: 20rem; /* Limit max width for larger screens */
+    padding: 2rem 1.5rem; /* Relative padding for responsiveness */
+    background-color: #1A334B; /* Darker Blue for contrast */
+    border-radius: 0.625rem; /* Relative border radius */
+    box-shadow: 0px 0.25rem 1rem rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #FFD700; /* Pale Gold */
+    box-sizing: border-box;
+}
+
+.logo {
+    width: 5rem; /* Responsive logo size */
+}
+
+.login-title {
+    color: #FFD700; /* Pale Gold */
+    font-size: 1.5rem; /* Relative font size */
+    font-weight: bold;
+    margin: 0 0 1.5rem;
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem; /* Relative padding */
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #0A1E2E; /* Match with Midnight Blue */
+    color: #FFD700; /* Pale Gold text */
+    font-size: 1rem; /* Relative font size */
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.input-group input::placeholder {
+    color: #CCCCCC;
+}
+
+.btn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #FFD700; /* Pale Gold */
+    color: #0A1E2E; /* Midnight Blue text */
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem; /* Relative font size */
+    font-weight: bold;
+    margin-top: 1.5rem;
+    box-sizing: border-box;
+}
+
+.btn:hover {
+    background-color: #E6B800; /* Slightly darker gold */
+}
+
+.error {
+    color: #FF4C4C; /* Red for error messages */
+    margin-top: 0.75rem;
+    font-size: 0.875rem; /* Relative font size */
+    font-weight: bold;
+}

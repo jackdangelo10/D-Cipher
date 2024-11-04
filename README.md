@@ -1,0 +1,1 @@
+npm install express sqlite3 bcrypt dotenv jsonwebtoken

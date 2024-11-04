@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Search bar and Add User button -->
+    <div class="header">
+      <input type="text" id="search-bar" placeholder="Search by Username">
+      <button id="add-user-btn" class="add-btn">➕ Add User</button>
+    </div>
+
+    <!-- Scrollable card view for users -->
+    <div class="card-list" id="user-entries">
+      <!-- User cards will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <!-- Modals for Adding and Deleting Users -->
+  <div id="add-user-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-add-user-modal" class="close-btn">&times;</span>
+      <h2>Add New User</h2>
+      <input type="text" id="new-username" placeholder="Username" required>
+      <input type="password" id="new-password" placeholder="Password" required>
+      <button id="submit-add-user" class="modal-submit-btn">Add User</button>
+    </div>
+  </div>
+
+  <div id="delete-user-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-delete-user-modal" class="close-btn">&times;</span>
+      <p>Are you sure you want to delete this user?</p>
+      <button id="confirm-delete-user" class="modal-submit-btn">Delete</button>
+    </div>
+  </div>
+
+  <script src="js/manage-users.js" type="module"></script>
+</body>
+</html>

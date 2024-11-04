@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# Dependencies
+node_modules/
+
+# Logs and debug files
+*.log
+DEBUG.txt
+
+# Database files
+users.db
+
+# OS-specific and editor-specific files
+.DS_Store
+Thumbs.db
+
+# Package lock files
+package-lock.json

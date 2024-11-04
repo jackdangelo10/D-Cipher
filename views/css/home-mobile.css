@@ -1,0 +1,465 @@
+/* Importing custom font */
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('../fonts/bona_nova/BonaNovaSC-Regular.ttf');
+}
+
+/* Basic styles */
+body {
+  font-family: 'Bona Nova', serif;
+  background-color: #0A1E2E;
+  color: #FFD700;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items to the top */
+  height: 100%;
+  width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: 56.25rem; /* Responsive max-width */
+  padding: 0.625rem; /* Relative padding */
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.3125rem; /* Smaller gap */
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+}
+
+#search-bar {
+  flex: 1;
+  padding: 0.625rem;
+  font-size: 2.5rem; /* Increased font size */
+  border: none;
+  border-radius: 0.3125rem;
+  background-color: #1A334B;
+  color: #FFD700;
+  box-sizing: border-box;
+  height: 6.25rem; /* Match search bar height */
+}
+
+.add-btn {
+  padding: 0 0.625rem;
+  background-color: #FFD700;
+  color: #0A1E2E;
+  border: none;
+  border-radius: 0.3125rem;
+  height: 6.25rem; /* Match search bar height */
+  width: 6.25rem; /* Set a fixed width */
+  font-size: 2.5rem;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* Parent container styling adjustments */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9375rem;
+  max-height: 300vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Styling for each password card */
+.card {
+  background-color: #1A334B;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0px 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  color: #FFD700;
+  display: flex;
+  align-items: center;
+  gap: 0.9375rem;
+}
+
+.card-left, .card-center, .card-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.card-left {
+  flex-direction: column;
+  font-size: 2.5rem;
+}
+
+.card-left span.service,
+.card-left span.username {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 2.5rem;
+}
+
+.card-center {
+  justify-content: center;
+  font-size: 4.375rem; /* Responsive font size */
+}
+
+.card-center img {
+  width: 5rem;
+  height: 5rem;
+  cursor: pointer;
+  margin-left: 0.3125rem;
+}
+
+.card-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.625rem;
+  font-size: 2.5rem;
+}
+
+.card-right select {
+  background-color: #FFD700;
+  color: #0A1E2E;
+  border: none;
+  padding: 0.3125rem;
+  border-radius: 0.3125rem;
+  cursor: pointer;
+  font-size: 2.5rem;
+}
+
+/* Three dots options button */
+.options-btn {
+  background: none;
+  border: none;
+  color: #FFD700;
+  font-size: 2.5rem;
+  cursor: pointer;
+  padding-left: 0.625rem;
+}
+
+.card-right .options-btn {
+  font-size: 3.75rem;
+  color: #FFD700;
+}
+
+/* Logo and Title */
+.logo-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3.75rem;
+  margin-top: 4.375rem;
+}
+
+.logo {
+  height: 3.125rem;
+  width: auto;
+  margin-right: 0.625rem;
+}
+
+.page-title {
+  font-family: 'Bona Nova', serif;
+  font-size: 10rem;
+  font-weight: bold;
+  color: #FFD700;
+  margin: 0;
+}
+
+/* Hamburger Button */
+.hamburger-btn {
+  position: absolute;
+  top: 0.9375rem;
+  left: -2.5rem;
+  font-size: 5.625rem;
+  color: #FFD700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+/* Side Panel Styling */
+.side-panel {
+  position: fixed;
+  top: 0;
+  left: -18.75rem;
+  width: 15.625rem;
+  height: 100%;
+  background-color: #1A334B;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  box-shadow: 0.3125rem 0 0.9375rem rgba(0, 0, 0, 0.3);
+  transition: left 0.3s ease;
+  z-index: 1000;
+  padding: 8.125rem 1.25rem;
+}
+
+.side-panel.open {
+  left: 0;
+}
+
+.side-panel-btn {
+  background: none;
+  color: #FFD700;
+  border: none;
+  padding: 0.9375rem 0;
+  font-size: 2.5rem;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.5);
+}
+
+.side-panel-btn:hover {
+  color: #FFFFFF;
+}
+
+/* Modal Background */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1001;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #1A334B;
+  color: #FFD700;
+  padding: 1.875rem;
+  border-radius: 0.5rem;
+  width: 43.75rem; /* Relative width */
+  height: auto;
+  max-width: 90%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.3);
+  font-size: 2.5rem;
+}
+
+/* Close Button */
+.modal .close-btn {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.9375rem;
+  font-size: 4.375rem;
+  color: #FFD700;
+  cursor: pointer;
+  height: 0.625rem;
+  width: 0.625rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: rgba(26, 51, 75, 0.8);
+}
+
+/* Input fields and Button */
+.modal input {
+  width: 90%;
+  height: 3.75rem;
+  padding: 0.625rem;
+  margin: 0.625rem 0;
+  border: none;
+  border-radius: 0.3125rem;
+  background-color: #0A1E2E;
+  font-size: 2.5rem;
+  color: #FFD700;
+}
+
+/* Shared styling for modal submit buttons */
+.modal-submit-btn {
+  background-color: #FFD700;
+  color: #0A1E2E;
+  border: none;
+  padding: 0.625rem;
+  border-radius: 0.3125rem;
+  cursor: pointer;
+  margin-top: 0.625rem;
+  width: 100%;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.modal-submit-btn:hover {
+  background-color: #E6B800;
+}
+
+.modal-message {
+  color: #ff4c4c;
+  margin-top: 0.625rem;
+  font-size: 2.5rem;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+  font-size: 2.5rem;
+  margin-top: 0.3125rem;
+  font-weight: bold;
+  max-width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.password-strength.weak {
+  color: #FF4C4C;
+}
+
+.password-strength.weak-medium {
+  color: #FFA500;
+}
+
+.password-strength.medium {
+  color: #FFD700;
+}
+
+.password-strength.medium-strong {
+  color: #9ACD32;
+}
+
+.password-strength.strong {
+  color: #32CD32;
+}
+
+/* Dropdown styled as a Yellow Button */
+#visibility {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #FFD700;
+  color: #0A1E2E;
+  font-size: 2.5rem;
+  font-family: 'Bona Nova', serif;
+  cursor: pointer;
+  appearance: none;
+  text-align: center;
+}
+
+/* Dropdown Arrow Styling */
+#visibility::after {
+  content: '\25BC';
+  font-size: 0.75rem;
+  position: absolute;
+  right: 0.9375rem;
+  color: #0A1E2E;
+  pointer-events: none;
+}
+
+/* Hover and Focus Styles */
+#visibility:hover,
+#visibility:focus {
+  background-color: #E6B800;
+  outline: none;
+}
+
+/* Three Dots Button */
+.three-dots-btn {
+  background: none;
+  border: none;
+  font-size: 1.125rem;
+  color: #FFD700;
+  cursor: pointer;
+  padding: 0.3125rem;
+}
+
+/* Options Container Styling */
+.options-container {
+  position: relative;
+  display: inline-block;
+  font-size: 2.5rem;
+}
+
+/* Three Dots Button Styling */
+.options-btn {
+  background: none;
+  border: none;
+  color: #FFD700;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.3125rem;
+}
+
+/* Dropdown Menu Styling */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 1.875rem;
+  left: 0;
+  background-color: #1A334B;
+  border-radius: 0.5rem;
+  box-shadow: 0px 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  z-index: 1500;
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 2.5rem;
+  transform: translateX(-100%);
+  min-width: 13.75rem;
+}
+
+/* Show class to display the dropdown */
+.dropdown-menu.show {
+  display: block;
+}
+
+/* Dropdown Item Styling */
+.dropdown-menu .dropdown-item {
+  background-color: #1A334B;
+  color: #FFD700;
+  border: none;
+  padding: 0.625rem 1.25rem;
+  text-align: left;
+  font-size: 2.5rem;
+  font-family: 'Bona Nova', serif;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-menu .dropdown-item:hover {
+  background-color: #0A1E2E;
+  color: #FFFFFF;
+}
+
+/* Bottom border for items */
+.dropdown-menu .dropdown-item:not(:last-child) {
+  border-bottom: 1px solid #FFD700;
+}
+
+/* Ensure no forced uppercase styling in cards */
+.card,
+.card-left span.service,
+.card-left span.username,
+.card-center,
+.card-right {
+  text-transform: none;
+  font-family: Arial, sans-serif;
+}
+
+.card .card-center .password {
+  max-width: 31.25rem;
+  word-break: break-all;
+  white-space: normal;
+}
+
+/* Target the username and service specifically within card-left */
+.card .card-left .service,
+.card .card-left .username {
+  max-width: 13.75rem;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
