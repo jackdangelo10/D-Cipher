@@ -21,6 +21,15 @@ command_exists() {
     command -v "$1" &> /dev/null
 }
 
+# Check if node_modules.zip exists and node_modules directory is missing
+if [[ -f "node_modules.zip" && ! -d "node_modules" ]]; then
+    echo "Extracting precompiled node_modules..."
+    unzip -q node_modules.zip -d .
+    echo "Dependencies extracted from node_modules.zip"
+else
+    echo "node_modules already exists or node_modules.zip is missing."
+fi
+
 # Function to install Node.js 16 using NVM if the version is below 16
 # Function to install Node.js 16 using NVM if the version is below 16
 install_node16_if_necessary() {
