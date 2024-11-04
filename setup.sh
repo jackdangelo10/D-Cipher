@@ -21,6 +21,30 @@ command_exists() {
     command -v "$1" &> /dev/null
 }
 
+# Function to install Node.js 16 using NVM if the version is below 16
+install_node16_if_necessary() {
+    if command_exists node; then
+        NODE_VERSION=$(node -v | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
+        NODE_MAJOR_VERSION=$(echo "$NODE_VERSION" | cut -d. -f1)
+        if (( NODE_MAJOR_VERSION >= 16 )); then
+            echo "Node.js version $NODE_VERSION is already installed and meets the version requirement."
+            return
+        fi
+    fi
+
+    echo "Node.js version 16+ is required. Installing NVM and Node.js 16..."
+    if ! command_exists nvm; then
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+        source ~/.nvm/nvm.sh
+    fi
+    nvm install 16
+    nvm use 16
+    nvm alias default 16
+}
+
+# Install Node.js 16 if necessary
+install_node16_if_necessary
+
 # Function to terminate background processes if they are running
 terminate_processes() {
     pkill -f "ngrok http" 2>/dev/null
