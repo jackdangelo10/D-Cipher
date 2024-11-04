@@ -74,6 +74,53 @@ install_node16_if_necessary() {
 # Install Node.js 16 if necessary
 install_node16_if_necessary
 
+# Function to configure swap if needed
+configure_swap() {
+    echo "Configuring swap memory..."
+    sudo sed -i 's/^CONF_SWAPSIZE=.*$/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+    sudo systemctl restart dphys-swapfile
+}
+
+# Function to install build tools
+install_build_tools() {
+    echo "Installing build-essential for compiling native dependencies..."
+    sudo apt update
+    sudo apt install -y build-essential
+}
+
+# Function to install sqlite3 with error handling
+install_sqlite3_with_retries() {
+    local retries=3
+    local count=0
+
+    while [[ $count -lt $retries ]]; do
+        echo "Attempting to install sqlite3... Try $((count+1)) of $retries"
+        
+        # Attempt to install sqlite3
+        if npm install sqlite3 --build-from-source; then
+            echo "sqlite3 installed successfully."
+            return 0
+        else
+            echo "sqlite3 installation failed."
+
+            # On first failure, configure swap and install build tools
+            if [[ $count -eq 0 ]]; then
+                echo "Applying additional system configurations for sqlite3 installation..."
+                configure_swap
+                install_build_tools
+            fi
+        fi
+
+        ((count++))
+    done
+
+    echo "Failed to install sqlite3 after $retries attempts."
+    exit 1
+}
+
+# Install sqlite3 with retry mechanism
+install_sqlite3_with_retries
+
 # Function to terminate background processes if they are running
 terminate_processes() {
     pkill -f "ngrok http" 2>/dev/null
