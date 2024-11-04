@@ -21,14 +21,6 @@ command_exists() {
     command -v "$1" &> /dev/null
 }
 
-# Check if node_modules.zip exists and node_modules directory is missing
-if [[ -f "node_modules.zip" && ! -d "node_modules" ]]; then
-    echo "Extracting precompiled node_modules..."
-    unzip -q node_modules.zip -d .
-    echo "Dependencies extracted from node_modules.zip"
-else
-    echo "node_modules already exists or node_modules.zip is missing."
-fi
 
 # Function to install Node.js 16 using NVM if the version is below 16
 # Function to install Node.js 16 using NVM if the version is below 16
@@ -82,20 +74,6 @@ install_node16_if_necessary() {
 
 # Install Node.js 16 if necessary
 install_node16_if_necessary
-
-# Function to configure swap if needed
-configure_swap() {
-    echo "Configuring swap memory..."
-    sudo sed -i 's/^CONF_SWAPSIZE=.*$/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
-    sudo systemctl restart dphys-swapfile
-}
-
-# Function to install build tools
-install_build_tools() {
-    echo "Installing build-essential for compiling native dependencies..."
-    sudo apt update
-    sudo apt install -y build-essential
-}
 
 # Function to terminate background processes if they are running
 terminate_processes() {
@@ -172,6 +150,44 @@ else
 fi
 
 
+# Step 1.5: Install required npm packages
+echo "Checking for required npm packages..."
+
+# List of specific packages needed
+REQUIRED_NPM_PACKAGES=("bcryptjs" "cors" "dotenv" "express" "jsonwebtoken" "prompt-sync" "express-rate-limit"
+    "serve-favicon")
+
+# Install any missing packages
+for PACKAGE in "${REQUIRED_NPM_PACKAGES[@]}"; do
+    if ! npm list "$PACKAGE" &>/dev/null; then
+        echo "Installing $PACKAGE..."
+        npm install "$PACKAGE"
+    else
+        echo "$PACKAGE is already installed."
+    fi
+done
+
+echo "All required npm packages are installed."
+
+# Configure swap and install sqlite3 with concurrency limited to 1
+install_sqlite3_with_swap() {
+    echo "Configuring additional swap memory for sqlite3 installation..."
+    sudo sed -i 's/^CONF_SWAPSIZE=.*$/CONF_SWAPSIZE=2048/' /etc/dphys-swapfile
+    sudo systemctl restart dphys-swapfile
+
+    echo "Installing sqlite3 with limited concurrency. This may take some time (5-20 min for 1GB RAM)..."
+    npm install sqlite3 --build-from-source --concurrency=1
+
+    # Restore default swap settings after sqlite3 installation
+    sudo sed -i 's/^CONF_SWAPSIZE=.*$/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+    sudo systemctl restart dphys-swapfile
+    echo "Reverted swap configuration."
+}
+
+# Call the function to install sqlite3 with swap enabled
+install_sqlite3_with_swap
+
+
 
 # Step 2: Check for existing database
 DB_FILE="./users.db"
@@ -189,6 +205,15 @@ else
     new_db=true
 fi
 
+# Step 3: Install project dependencies
+echo "Setting up project dependencies..."
+npm install
+
+# Install prompt-sync if not already installed
+if ! npm list prompt-sync &>/dev/null; then
+    echo "Installing prompt-sync for command-line prompts..."
+    npm install prompt-sync
+fi
 
 # Step 4: Configure environment variables
 echo "Configuring environment variables..."
