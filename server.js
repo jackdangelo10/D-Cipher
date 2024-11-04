@@ -5,6 +5,7 @@ const app = express();
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const passwordRoutes = require('./routes/passwordRoutes');
+const favicon = require('serve-favicon');
 
 // Serve the favicon
 app.use(favicon(path.join(__dirname, 'favicon.ico')));

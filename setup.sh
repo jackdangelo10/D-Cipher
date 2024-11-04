@@ -237,6 +237,20 @@ EOL
 
 # Define the msmtp configuration file path
 MSMTP_CONFIG="$HOME/.msmtprc"
+EMAIL_RECIPIENT=""  # Initialize EMAIL_RECIPIENT globally
+
+# Function to detect and set the certificate path
+configure_certificate_path() {
+    if [[ -f "/etc/ssl/cert.pem" ]]; then
+        echo "/etc/ssl/cert.pem"
+    elif [[ -f "/etc/ssl/certs/ca-certificates.crt" ]]; then
+        echo "/etc/ssl/certs/ca-certificates.crt"
+    elif [[ -f "/etc/ssl/certs/ca-bundle.crt" ]]; then
+        echo "/etc/ssl/certs/ca-bundle.crt"
+    else
+        echo "none"  # No valid cert file found
+    fi
+}
 
 # Install msmtp if not already installed
 install_msmtp() {
@@ -266,6 +280,7 @@ configure_msmtp() {
         read -p "Do you want to keep the saved Gmail credentials? (y/n): " keep_credentials
         if [[ "$keep_credentials" == "y" ]]; then
             echo "Using existing configuration."
+            EMAIL_RECIPIENT="$USER_EMAIL"
             return
         fi
     fi
@@ -289,11 +304,18 @@ configure_msmtp() {
         read -sp "Confirm your Gmail password: " USER_PASSWORD_CONFIRM
         echo
         if [[ "$USER_PASSWORD" == "$USER_PASSWORD_CONFIRM" ]]; then
+            EMAIL_RECIPIENT="$USER_EMAIL"  # Set EMAIL_RECIPIENT here
             break
         else
             echo "Passwords do not match. Please try again."
         fi
     done
+
+    # Detect the correct certificate path
+    CERT_PATH=$(configure_certificate_path)
+    if [[ "$CERT_PATH" == "none" ]]; then
+        echo "Warning: No valid certificate file found for msmtp. TLS may not work without it."
+    fi
 
     # Create or update the msmtp configuration file
     echo "Creating msmtp configuration..."
@@ -301,7 +323,7 @@ configure_msmtp() {
 defaults
 auth           on
 tls            on
-tls_trust_file /etc/ssl/cert.pem
+tls_trust_file ${CERT_PATH}
 logfile        ~/.msmtp.log
 
 account gmail
@@ -318,7 +340,6 @@ EOF
     chmod 600 "$MSMTP_CONFIG"
     echo "msmtp configuration saved and secured."
 }
-
 
 # Run the installation and configuration functions
 install_msmtp
@@ -499,6 +520,6 @@ echo "You will also receive an email with the link."
 # Send email notification with the ngrok URL
 EMAIL_SUBJECT="Your App Setup is Complete"
 EMAIL_BODY="Hello,\n\nYour application setup is complete. You can access it at the following URL:\n\n$NGROK_URL\n\nThank you!"
-EMAIL_RECIPIENT="$USER_EMAIL"
 
+echo "EMAIL_RECIPIENT is set to: $EMAIL_RECIPIENT"
 echo -e "Subject: $EMAIL_SUBJECT\n\n$EMAIL_BODY" | msmtp "$EMAIL_RECIPIENT"
