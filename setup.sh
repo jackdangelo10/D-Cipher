@@ -430,3 +430,13 @@ echo "Started new instance of daemon.sh for server monitoring."
 # Disable the trap just before the script finishes successfully
 trap - EXIT
 echo "Setup complete! Your app is available at $NGROK_URL".
+
+# Notify the user on the console
+echo "You will also receive an email with the link."
+
+# Send email notification with the ngrok URL
+EMAIL_SUBJECT="Your App Setup is Complete"
+EMAIL_BODY="Hello,\n\nYour application setup is complete. You can access it at the following URL:\n\n$NGROK_URL\n\nThank you!"
+EMAIL_RECIPIENT="$USER_EMAIL"
+
+echo -e "Subject: $EMAIL_SUBJECT\n\n$EMAIL_BODY" | msmtp "$EMAIL_RECIPIENT"
