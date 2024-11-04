@@ -34,6 +34,13 @@ install_node16_if_necessary() {
     fi
 
     echo "Node.js version 16+ is required. Installing NVM and Node.js 16..."
+
+    # Ensure the .nvm directory exists
+    if [[ ! -d "$HOME/.nvm" ]]; then
+        mkdir -p "$HOME/.nvm"
+    fi
+
+    # Install NVM if it’s not already installed
     if ! command_exists nvm; then
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 
@@ -42,14 +49,26 @@ install_node16_if_necessary() {
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
         # Add NVM to bash profile for future sessions
-        echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
-        echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
+        if ! grep -q 'export NVM_DIR="$HOME/.nvm"' ~/.bashrc; then
+            echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
+        fi
+
+        # Reload NVM for the current session
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     fi
 
-    # Use NVM to install and use Node.js 16
-    nvm install 16
-    nvm use 16
-    nvm alias default 16
+    # Check if NVM was successfully installed before proceeding
+    if command_exists nvm; then
+        # Use NVM to install and set Node.js 16 as the default
+        nvm install 16
+        nvm use 16
+        nvm alias default 16
+    else
+        echo "Error: NVM installation failed. Please check for errors and try again."
+        exit 1
+    fi
 }
 
 # Install Node.js 16 if necessary
