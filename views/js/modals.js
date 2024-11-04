@@ -60,6 +60,7 @@ document.getElementById("user-submit-username-change").addEventListener("click",
     const response = await changeUsername(currentPassword, newUsername);
     document.getElementById("user-modal-message").textContent = response.message || "Username changed successfully!";
     closeModal("user-change-username-modal"); // Close modal after submission
+    reloadCards()
   } catch (error) {
     document.getElementById("user-modal-message").textContent = error.message || "Error changing username.";
   }
@@ -80,6 +81,7 @@ document.getElementById("user-submit-password-change").addEventListener("click",
     const response = await changePassword(currentPassword, newPassword);
     document.getElementById("user-password-modal-message").textContent = response.message || "Password changed successfully!";
     closeModal("user-change-password-modal"); // Close modal after submission
+    reloadCards()
   } catch (error) {
     document.getElementById("user-password-modal-message").textContent = error.message || "Error changing password.";
   }
@@ -113,6 +115,7 @@ document.getElementById("card-submit-username-change").addEventListener("click",
     const response = await updateUsernameEntry(entryId, currentPassword, newUsername);
     document.getElementById("card-username-modal-message").textContent = response.message || "Username updated successfully!";
     closeModal("card-change-username-modal"); // Close modal after submission
+    reloadCards()
   } catch (error) {
     document.getElementById("card-username-modal-message").textContent = error.message || "Error updating username.";
   }
@@ -128,6 +131,7 @@ document.getElementById("card-submit-password-change").addEventListener("click",
     const response = await updatePasswordEntry(entryId, currentPassword, newPassword);
     document.getElementById("card-password-modal-message").textContent = response.message || "Password updated successfully!";
     closeModal("card-change-password-modal"); // Close modal after submission
+    reloadCards()
   } catch (error) {
     document.getElementById("card-password-modal-message").textContent = error.message || "Error updating password.";
   }
@@ -165,9 +169,8 @@ document.getElementById("submit-add-password").addEventListener("click", async (
     document.getElementById("add-new-password").value = "";
     document.getElementById("visibility").value = "private";
 
-    const passwords = await getVisiblePasswords();
-    await loadCards(passwords);
     closeModal("add-password-modal"); // Close modal after submission
+    reloadCards()
   } catch (error) {
     messageElement.textContent = error.message || "Error adding password.";
     messageElement.style.color = "red";
@@ -210,4 +213,9 @@ document.getElementById("user-new-password").addEventListener("input", (event) =
 // Helper function to format the crack time into a readable string
 function formatCrackTime({ years, months, days, hours, minutes, seconds }) {
   return `${years}Y:${months}M:${days}D:${hours}H:${minutes}M:${seconds}S`;
+}
+
+async function reloadCards() {
+  const passwords = await getVisiblePasswords();
+  loadCards(passwords);
 }

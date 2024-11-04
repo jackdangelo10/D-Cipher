@@ -137,6 +137,8 @@ const User = {
   async updatePassword(id, newPassword) {
     try {
       const hashedPassword = await bcrypt.hash(newPassword, 12);
+      console.log("new password:", newPassword);
+      console.log("new hashed password:", hashedPassword);
       return new Promise((resolve, reject) => {
         db.run(`UPDATE users SET password = ? WHERE id = ?`, [hashedPassword, id], function (err) {
           if (err) {

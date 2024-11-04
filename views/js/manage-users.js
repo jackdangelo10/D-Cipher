@@ -80,5 +80,23 @@ document.querySelectorAll(".close-btn").forEach(btn => {
   });
 });
 
+// Attach the search filter functionality
+document.getElementById("search-bar").addEventListener("input", () => {
+  const searchText = document.getElementById("search-bar").value.toLowerCase();
+
+  // Filter the displayed users based on the search text
+  const userEntries = document.getElementById("user-entries");
+  const users = Array.from(userEntries.children);
+
+  users.forEach(user => {
+    const username = user.querySelector(".username").textContent.toLowerCase();
+    if (username.includes(searchText)) {
+      user.style.display = "flex"; // Show the user card
+    } else {
+      user.style.display = "none"; // Hide the user card
+    }
+  });
+});
+
 // Initial load
 loadUsers();

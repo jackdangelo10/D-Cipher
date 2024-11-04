@@ -13,6 +13,6 @@ router.delete('/delete-user', verifyToken, userController.deleteUser);
 router.post('/validate-password', verifyToken, userController.validatePassword);
 router.get('/role', verifyToken, userController.getUserRole);
 router.get('/non-admin-users', verifyToken, userController.getNonAdminUsers);
-router.post('/create', userController.createUser);
+router.post('/create',verifyToken, userController.createUser);
 
 module.exports = router;

@@ -280,7 +280,7 @@ configure_msmtp() {
         read -p "Do you want to keep the saved Gmail credentials? (y/n): " keep_credentials
         if [[ "$keep_credentials" == "y" ]]; then
             echo "Using existing configuration."
-            EMAIL_RECIPIENT="$USER_EMAIL"
+            EMAIL_RECIPIENT=$(grep '^from' "$MSMTP_CONFIG" | awk '{print $2}')
             return
         fi
     fi
