@@ -4,7 +4,7 @@ D’Cipher - Secure Family Password Manager
 
 D’Cipher is a highly secure, multi-user password manager designed for family-based access. It allows users to store passwords privately or share them with specific family members securely, using AES encryption, user authentication, and role-based access control.
 
-This project is optimized for deployment on a Raspberry Pi but is compatible with other operating systems, including macOS and Linux.
+This project is optimized for deployment on a Raspberry Pi but is compatible with other operating systems, including macOS and Linux. 
 
 Features
 
@@ -45,6 +45,10 @@ Run the setup script:
 
 chmod +x setup.sh
 ./setup.sh
+
+Why Use a Precompiled node_modules Archive?
+
+Due to limited RAM on low-resource devices like Raspberry Pi (especially models with 1GB RAM), installing certain dependencies can be challenging. To simplify this setup, we’ve precompiled all dependencies on a more powerful machine and compressed the node_modules directory into node_modules.zip. This approach bypasses the need to compile native modules on the device itself, reducing setup time and avoiding common installation issues.
 
 3. Environment Variables
 
