@@ -22,8 +22,8 @@ exports.login = async (req, res) => {
 
     const user = await User.findByUsername(username);
 
-    console.log("In login, password:", password);
-    console.log("In login, user.password:", user.password);
+    //console.log("In login, password:", password);
+    //console.log("In login, user.password:", user.password);
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: 'Authentication failed' });
     }

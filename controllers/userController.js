@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 // Admin-only route for creating a new user
 exports.createUser = async (req, res) => {
   const { username, password} = req.body;
-  console.log("userController createUser with username", req.user);
+  //console.log("userController createUser with username", req.user);
   const { roles: requesterRole } = req.user;
 
   if (requesterRole !== 'admin') {
@@ -12,7 +12,7 @@ exports.createUser = async (req, res) => {
   }
   else
   {
-    console.log("userController createUser with requesterRole", requesterRole);
+    //console.log("userController createUser with requesterRole", requesterRole);
   }
 
   try {
@@ -34,7 +34,7 @@ exports.getAllUsers = async (req, res) => {
 
 
 exports.getNonAdminUsers = async (req, res) => {
-  console.log("userController getNonAdminUsers");
+  //console.log("userController getNonAdminUsers");
   try {
     const users = await User.getNonAdminUsers();
     res.json(users);
@@ -187,13 +187,13 @@ exports.changePassword = async (req, res) => {
     // Find the user by ID
     const user = await User.findById(userId);
     if (!user) {
-      console.log("userController changePassword user not found");
+      //console.log("userController changePassword user not found");
       return res.status(404).json({ message: 'User not found' });
     }
 
     // Validate the current password
-    console.log("currentPassword", currentPassword);
-    console.log("user.password", user.password);
+    //console.log("currentPassword", currentPassword);
+    //console.log("user.password", user.password);
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     user.password = currentPassword;
     if (!isMatch) {
@@ -212,7 +212,7 @@ exports.changePassword = async (req, res) => {
 // Retrieve the role of the authenticated user
 exports.getUserRole = async (req, res) => {
   const { id: userId } = req.user;
-  console.log("getUserRole userId", userId);
+  //console.log("getUserRole userId", userId);
 
   try {
     // Find the user by ID

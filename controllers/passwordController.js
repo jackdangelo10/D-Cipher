@@ -133,16 +133,16 @@ exports.updateUsernameOnly = async (req, res) => {
     try {
       const decryptedPassword = decrypt(entry.encrypted_password);
       isMatch = decryptedPassword === currentPassword;
-      console.log("isMatch", isMatch);
+      //console.log("isMatch", isMatch);
       //print out the decrypted password
-      console.log("decryptedPassword", decryptedPassword);
-      console.log("currentPassword", currentPassword);
+      //console.log("decryptedPassword", decryptedPassword);
+      //console.log("currentPassword", currentPassword);
     } catch (error) {
       console.error("Error decrypting current password:", error.message);
     }
 
     if (!isMatch) {
-      console.log("Incorrect current password");
+      //console.log("Incorrect current password");
       return res.status(401).json({ message: 'Incorrect current password' });
     }
 
