@@ -21,6 +21,39 @@ command_exists() {
     command -v "$1" &> /dev/null
 }
 
+
+# Ensure .env file exists
+if [[ ! -f ".env" ]]; then
+    touch .env
+fi
+
+# Ensure CRYPTO_SECRET_KEY is set
+if ! grep -q "^CRYPTO_SECRET_KEY=" .env; then
+    echo "Generating a new CRYPTO_SECRET_KEY..."
+    CRYPTO_SECRET_KEY=$(openssl rand -base64 32)
+    echo "CRYPTO_SECRET_KEY=${CRYPTO_SECRET_KEY}" >> .env
+else
+    echo "CRYPTO_SECRET_KEY already set in .env"
+fi
+
+# Ensure JWT_SECRET is set
+if ! grep -q "^JWT_SECRET=" .env; then
+    echo "Generating a new JWT_SECRET..."
+    JWT_SECRET=$(openssl rand -base64 32)
+    echo "JWT_SECRET=${JWT_SECRET}" >> .env
+else
+    echo "JWT_SECRET already set in .env"
+fi
+
+# Ensure other environment variables exist
+if ! grep -q "^PORT=" .env; then
+    echo "PORT=3000" >> .env
+fi
+
+# Reload environment variables
+export $(grep -v '^#' .env | xargs)
+
+
 # Install Node.js 16 if necessary
 install_node16_if_necessary() {
     if command_exists node; then
