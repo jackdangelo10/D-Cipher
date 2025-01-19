@@ -88,38 +88,12 @@ install_build_tools() {
     sudo apt install -y build-essential
 }
 
-# Function to install sqlite3 with error handling
-install_sqlite3_with_retries() {
-    local retries=3
-    local count=0
-
-    while [[ $count -lt $retries ]]; do
-        echo "Attempting to install sqlite3... Try $((count+1)) of $retries"
-        
-        # Attempt to install sqlite3
-        if npm install sqlite3 --build-from-source; then
-            echo "sqlite3 installed successfully."
-            return 0
-        else
-            echo "sqlite3 installation failed."
-
-            # On first failure, configure swap and install build tools
-            if [[ $count -eq 0 ]]; then
-                echo "Applying additional system configurations for sqlite3 installation..."
-                configure_swap
-                install_build_tools
-            fi
-        fi
-
-        ((count++))
-    done
-
-    echo "Failed to install sqlite3 after $retries attempts."
-    exit 1
-}
-
-# Install sqlite3 with retry mechanism
-install_sqlite3_with_retries
+echo "Applying additional system configurations for sqlite3 installation..."
+configure_swap
+install_build_tools
+echo "Configuration complete, installing sqlite3..."
+npm install sqlite3 --build-from-source
+echo "sqlite3 installed successfully."
 
 # Function to terminate background processes if they are running
 terminate_processes() {
