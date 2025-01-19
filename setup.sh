@@ -21,16 +21,6 @@ command_exists() {
     command -v "$1" &> /dev/null
 }
 
-# Check if node_modules.zip exists and node_modules directory is missing
-if [[ -f "node_modules.zip" && ! -d "node_modules" ]]; then
-    echo "Extracting precompiled node_modules..."
-    unzip -q node_modules.zip -d .
-    echo "Dependencies extracted from node_modules.zip"
-else
-    echo "node_modules already exists or node_modules.zip is missing."
-fi
-
-# Function to install Node.js 16 using NVM if the version is below 16
 # Function to install Node.js 16 using NVM if the version is below 16
 install_node16_if_necessary() {
     if command_exists node; then
@@ -82,6 +72,7 @@ install_node16_if_necessary() {
 
 # Install Node.js 16 if necessary
 install_node16_if_necessary
+echo "Node.js 16 setup complete."
 
 # Function to configure swap if needed
 configure_swap() {
@@ -143,9 +134,6 @@ trap 'echo "Script ended unexpectedly. Terminating all background processes."; t
 terminate_processes
 
 
-echo "Detected OS: $OS"
-
-
 # Step 0: Check if mailutils is installed and install if necessary
 echo "Checking for mailutils dependency..."
 
@@ -168,48 +156,11 @@ else
 fi
 
 
-# Step 1: Install Node.js, npm, and SQLite based on OS if they are not installed
-echo "Checking for Node.js, npm, and SQLite..."
-
-if ! command_exists node || ! command_exists npm; then
-    echo "Installing Node.js and npm..."
-    if [[ "$OS" == "linux" || "$OS" == "raspbian" ]]; then
-        sudo apt update
-        sudo apt install -y nodejs npm
-    elif [[ "$OS" == "macos" ]]; then
-        if ! command_exists brew; then
-            echo "Homebrew not found. Installing Homebrew..."
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        fi
-        brew install node
-    elif [[ "$OS" == "windows" ]]; then
-        echo "Please install Node.js manually: https://nodejs.org/"
-        read -p "Press Enter to continue after installing Node.js and npm."
-    fi
-else
-    echo "Node.js and npm are already installed."
-fi
-
-if ! command_exists sqlite3; then
-    echo "Installing SQLite..."
-    if [[ "$OS" == "linux" || "$OS" == "raspbian" ]]; then
-        sudo apt install -y sqlite3
-    elif [[ "$OS" == "macos" ]]; then
-        brew install sqlite
-    elif [[ "$OS" == "windows" ]]; then
-        echo "Please install SQLite manually: https://www.sqlite.org/download.html"
-        read -p "Press Enter to continue after installing SQLite."
-    fi
-else
-    echo "SQLite is already installed."
-fi
-
-
 # Step 1.5: Install required npm packages
 echo "Checking for required npm packages..."
 
 # List of specific packages needed
-REQUIRED_NPM_PACKAGES=("bcryptjs" "cors" "dotenv" "express" "jsonwebtoken" "prompt-sync" "sqlite3" "express-rate-limit"
+REQUIRED_NPM_PACKAGES=("bcryptjs" "cors" "dotenv" "express" "jsonwebtoken" "prompt-sync" "express-rate-limit"
     "serve-favicon")
 
 # Install any missing packages
@@ -240,17 +191,9 @@ if [[ -f "$DB_FILE" ]]; then
     fi
 else
     new_db=true
+    echo "No database detected, creation of a new users.db necessary..."
 fi
 
-# Step 3: Install project dependencies
-echo "Setting up project dependencies..."
-npm install
-
-# Install prompt-sync if not already installed
-if ! npm list prompt-sync &>/dev/null; then
-    echo "Installing prompt-sync for command-line prompts..."
-    npm install prompt-sync
-fi
 
 # Step 4: Configure environment variables
 echo "Configuring environment variables..."
@@ -267,6 +210,7 @@ if [[ -f ".env" && "$new_db" == false ]]; then
 else
     # Generate a new CRYPTO_SECRET_KEY if creating a new database or .env doesn't exist
     CRYPTO_SECRET_KEY=$(openssl rand -base64 32)
+    echo "New cryptographic key generated for jwt secret"
 fi
 PORT=3000
 
@@ -371,7 +315,7 @@ EOF
 install_msmtp
 configure_msmtp
 
-echo "Setup complete."
+echo "msmpt setup complete."
 
 
 
