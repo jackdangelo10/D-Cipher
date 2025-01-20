@@ -390,12 +390,27 @@ install_cloudflared() {
         return
     fi
     echo "Installing Cloudflare Tunnel..."
+    OS=$(uname | tr '[:upper:]' '[:lower:]')
+    if grep -q "Raspbian" /etc/os-release; then
+        OS="raspbian"
+    fi
+
     if [[ "$OS" == "linux" || "$OS" == "raspbian" ]]; then
-        sudo apt update && sudo apt install -y cloudflared
-    elif [[ "$OS" == "macos" ]]; then
+        sudo apt update
+        sudo apt install -y curl
+        curl -fsSL https://developers.cloudflare.com/cloudflare-one/static/cloudflared/install.sh | sudo bash
+    elif [[ "$OS" == "darwin" ]]; then
+        if ! command_exists brew; then
+            echo "Homebrew not found. Installing Homebrew..."
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        fi
         brew install cloudflared
     elif [[ "$OS" == "windows" ]]; then
-        choco install cloudflared
+        if ! command_exists choco; then
+            echo "Chocolatey not found. Please install it manually from https://chocolatey.org/"
+            exit 1
+        fi
+        choco install cloudflared -y
     else
         echo "Unsupported OS. Please install cloudflared manually."
         exit 1
